@@ -1,32 +1,35 @@
+'use client';
+
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import InquiryForm from '../components/InquiryForm';
-import { ArrowIcon, CheckIcon, ShieldIcon } from '../components/Icons';
+import { ArrowIcon, ShieldIcon } from '../components/Icons';
 import LanguageSwitcher from '../components/LanguageSwitcher';
-import { advantages, faqs, markets, products, solutions } from '../data/home';
+import { markets } from '../data/home';
+import { getLanguageFromPathname, homeTranslations } from '../data/i18n';
 
 const whatsappUrl = 'https://wa.me/8618824278011?text=Hello%2C%20I%20am%20interested%20in%20your%20products.%20Please%20send%20me%20more%20details.';
 
 export default function HomePage() {
+  const pathname = usePathname() || '/';
+  const language = getLanguageFromPathname(pathname);
+  const copy = homeTranslations[language] || homeTranslations.en;
+
   return (
     <>
-      <Header />
+      <Header copy={copy} />
       <main>
         <section className="hero v3-hero" id="home">
           <div className="hero-copy">
-            <h1>Shenzhen LED Display Manufacturer for Global Project Buyers</h1>
-            <p>
-              HAFOND builds customized indoor, outdoor, rental and creative LED display solutions with in-house R&D, SMT assembly, 72-hour aging test and final QC.
-            </p>
+            <h1>{copy.hero.title}</h1>
+            <p>{copy.hero.text}</p>
             <div className="hero-actions">
-              <a className="button button-primary" href="#inquiry">Get a Quote <ArrowIcon /></a>
-              <a className="button button-whatsapp" href={whatsappUrl} target="_blank" rel="noreferrer">WhatsApp Us</a>
-              <a className="button button-outline" href="/assets/docs/hafond-led-screen-catalog.pdf">Download Catalog</a>
+              <a className="button button-primary" href="#inquiry">{copy.cta.quote} <ArrowIcon /></a>
+              <a className="button button-whatsapp" href={whatsappUrl} target="_blank" rel="noreferrer">{copy.cta.whatsapp}</a>
+              <a className="button button-outline" href="/assets/docs/hafond-led-screen-catalog.pdf">{copy.cta.catalog}</a>
             </div>
-            <div className="hero-proof" aria-label="HAFOND trust points">
-              <span>Est. 2014</span>
-              <span>3000+ sqm factory</span>
-              <span>70+ professionals</span>
-              <span>Not a trading company</span>
+            <div className="hero-proof" aria-label={copy.hero.proofLabel}>
+              {copy.hero.proof.map((item) => <span key={item}>{item}</span>)}
             </div>
           </div>
           <div className="hero-visual">
@@ -35,11 +38,11 @@ export default function HomePage() {
         </section>
 
         <section className="section product-section" id="products">
-          <SectionIntro title="Product Categories Built Around Project Demand" text="Strategic product order follows HAFOND's sales priority: flagship outdoor fixed, creative custom differentiation, high-margin fine pitch, traffic products and rental support." />
+          <SectionIntro title={copy.sections.products.title} text={copy.sections.products.text} />
           <div className="product-grid">
-            {products.map((product) => (
+            {copy.products.map((product) => (
               <article className="product-card" key={product.title}>
-                <Image src={product.image} alt={`${product.title} LED display - HAFOND`} width={720} height={420} />
+                <Image src={product.image} alt={`${product.title} - HAFOND`} width={720} height={420} />
                 <div>
                   <span>{product.tag}</span>
                   <h3>{product.title}</h3>
@@ -54,11 +57,11 @@ export default function HomePage() {
         </section>
 
         <section className="section dark-band" id="solutions">
-          <SectionIntro title="Solutions for the Buyers HAFOND Wants" text="Each scenario can become an SEO page, AIO/GEO answer target and future paid traffic landing page." />
+          <SectionIntro title={copy.sections.solutions.title} text={copy.sections.solutions.text} />
           <div className="solution-grid">
-            {solutions.map(([title, text, image]) => (
+            {copy.solutions.map(([title, text, image]) => (
               <article className="solution-card" key={title}>
-                <Image src={image} alt={`${title} LED display solution - HAFOND`} width={520} height={340} />
+                <Image src={image} alt={`${title} - HAFOND`} width={520} height={340} />
                 <div>
                   <h3>{title}</h3>
                   <p>{text}</p>
@@ -70,16 +73,14 @@ export default function HomePage() {
 
         <section className="section quality-section" id="factory">
           <div>
-            <h2>Factory Credibility for Supplier Shortlisting</h2>
-            <p>
-              HAFOND gives overseas buyers clear manufacturing proof: Shenzhen factory support, in-house production workflow, 72-hour aging test, final QC and export-ready certification documents.
-            </p>
+            <h2>{copy.sections.factory.title}</h2>
+            <p>{copy.sections.factory.text}</p>
             <div className="cert-row">
               {['CE', 'RoHS', 'FCC', 'ISO 9001:2015'].map((cert) => <span key={cert}><ShieldIcon />{cert}</span>)}
             </div>
           </div>
           <div className="advantage-stack">
-            {advantages.map(([title, text]) => (
+            {copy.advantages.map(([title, text]) => (
               <article key={title}>
                 <h3>{title}</h3>
                 <p>{text}</p>
@@ -89,20 +90,16 @@ export default function HomePage() {
         </section>
 
         <section className="section markets-section" id="cases">
-          <SectionIntro title="Market Focus and Case Study Direction" text="First launch in English, then expand Spanish and German pages for the strongest target regions." />
+          <SectionIntro title={copy.sections.cases.title} text={copy.sections.cases.text} />
           <div className="market-cloud">
             {markets.map((market) => <span key={market}>{market}</span>)}
           </div>
           <div className="case-preview-grid">
-            {[
-              ['Outdoor DOOH Projects', 'Middle East and South America outdoor billboard opportunities.'],
-              ['Stadium & Municipal Displays', 'Project contractor content for public and sports scenarios.'],
-              ['Creative Retail Landmarks', 'Custom LED formats for brand-driven buyers.']
-            ].map(([title, text]) => (
+            {copy.cases.map(([title, text]) => (
               <article key={title}>
                 <h3>{title}</h3>
                 <p>{text}</p>
-                <a href="#inquiry">Discuss similar project <ArrowIcon /></a>
+                <a href="#inquiry">{copy.cta.discussProject} <ArrowIcon /></a>
               </article>
             ))}
           </div>
@@ -111,18 +108,16 @@ export default function HomePage() {
         <section className="section consultant-section" id="about">
           <Image src="/assets/generated/team-factory-credibility.png" alt="HAFOND sales and project support team with company logo in LED display factory" width={980} height={620} />
           <div>
-            <h2>Project Support, Not Catalog-Only Selling</h2>
-            <p>
-              HAFOND is best positioned for buyers who need product selection, cabinet planning, technical confirmation, remote installation guidance and spare parts support.
-            </p>
-            <a className="button button-primary" href="#inquiry">Ask for Project Advice <ArrowIcon /></a>
+            <h2>{copy.sections.about.title}</h2>
+            <p>{copy.sections.about.text}</p>
+            <a className="button button-primary" href="#inquiry">{copy.cta.projectAdvice} <ArrowIcon /></a>
           </div>
         </section>
 
         <section className="section faq-section" id="resources">
-          <SectionIntro title="Buyer Questions Answered for SEO and AI Search" text="Short direct answers help Google AI Overview, Bing/Copilot, Perplexity and ChatGPT understand HAFOND accurately." />
+          <SectionIntro title={copy.sections.faq.title} text={copy.sections.faq.text} />
           <div className="faq-grid">
-            {faqs.map(([q, a]) => (
+            {copy.faqs.map(([q, a]) => (
               <article key={q}>
                 <h3>{q}</h3>
                 <p>{a}</p>
@@ -133,73 +128,71 @@ export default function HomePage() {
 
         <section className="section inquiry-section" id="inquiry">
           <div>
-            <h2>Send Your LED Display Project Requirements</h2>
-            <p>
-              The form follows HAFOND's required B2B fields for quote quality, CRM routing and future Google Ads conversion tracking.
-            </p>
+            <h2>{copy.sections.inquiry.title}</h2>
+            <p>{copy.sections.inquiry.text}</p>
             <div className="contact-lines">
               <span>info@hafondled.com</span>
               <span>WhatsApp: +86-18824278011</span>
               <span>Shenzhen, China</span>
             </div>
           </div>
-          <InquiryForm />
+          <InquiryForm language={language} />
         </section>
       </main>
-      <Footer />
+      <Footer copy={copy} />
     </>
   );
 }
 
-function Header() {
+function Header({ copy }) {
   return (
     <header className="site-header">
       <a className="logo" href="#home">
         <Image src="/assets/hafond-logo.png" alt="HAFOND logo" width={280} height={72} priority />
       </a>
       <nav>
-        <a className="nav-link" href="#home">Home</a>
-        <MegaItem label="Products" href="#products" type="products" />
-        <MegaItem label="Solutions" href="#solutions" type="solutions" />
-        <MegaItem label="About" href="#about" type="about" />
-        <a className="nav-link" href="#factory">Factory</a>
-        <MegaItem label="Cases" href="#cases" type="cases" />
-        <MegaItem label="Resources" href="#resources" type="resources" />
-        <a className="nav-link" href="#contact">Contact</a>
+        <a className="nav-link" href="#home">{copy.nav.home}</a>
+        <MegaItem label={copy.nav.products} href="#products" type="products" copy={copy} />
+        <MegaItem label={copy.nav.solutions} href="#solutions" type="solutions" copy={copy} />
+        <MegaItem label={copy.nav.about} href="#about" type="about" copy={copy} />
+        <a className="nav-link" href="#factory">{copy.nav.factory}</a>
+        <MegaItem label={copy.nav.cases} href="#cases" type="cases" copy={copy} />
+        <MegaItem label={copy.nav.resources} href="#resources" type="resources" copy={copy} />
+        <a className="nav-link" href="#contact">{copy.nav.contact}</a>
       </nav>
       <div className="site-actions">
         <LanguageSwitcher />
-        <a className="button button-primary header-cta" href="#inquiry">Get a Quote</a>
+        <a className="button button-primary header-cta" href="#inquiry">{copy.cta.quote}</a>
       </div>
     </header>
   );
 }
 
-function MegaItem({ label, href, type }) {
+function MegaItem({ label, href, type, copy }) {
   return (
     <div className="mega-item">
       <a className="nav-link" href={href}>{label}</a>
       {type === 'products' && (
-        <div className="mega-menu mega-wide" aria-label="Products mega menu">
+        <div className="mega-menu mega-wide" aria-label={`${copy.nav.products} menu`}>
           <div className="mega-column mega-featured">
-            <span>Product Center</span>
-            <h3>Choose by project demand, not by catalog noise.</h3>
-            <p>Outdoor fixed, creative custom, fine pitch, indoor SMD and rental LED display categories are ordered by HAFOND's strategic priority.</p>
-            <a className="mega-cta" href="#inquiry">Send screen size <ArrowIcon /></a>
+            <span>{copy.mega.productCenter}</span>
+            <h3>{copy.mega.productTitle}</h3>
+            <p>{copy.mega.productText}</p>
+            <a className="mega-cta" href="#inquiry">{copy.cta.sendScreen} <ArrowIcon /></a>
           </div>
           <div className="mega-column">
             <span>Outdoor Fixed</span>
             <a href="#products">FOC / FOE Series</a>
             <a href="#products">FOQ / FOS Series</a>
             <a href="#products">FSS Stadium Series</a>
-            <a href="#inquiry">Ask for outdoor quote</a>
+            <a href="#inquiry">{copy.cta.outdoorQuote}</a>
           </div>
           <div className="mega-column">
             <span>Indoor LED</span>
             <a href="#products">COB / GOB Fine Pitch</a>
             <a href="#products">FIA / FIB / FIC / FID</a>
             <a href="#products">Indoor SMD P2-P5</a>
-            <a href="#inquiry">Meeting room solution</a>
+            <a href="#inquiry">{copy.cta.meetingRoom}</a>
           </div>
           <div className="mega-column">
             <span>Rental & Creative</span>
@@ -209,19 +202,19 @@ function MegaItem({ label, href, type }) {
             <a href="#products">Dance Floor / Custom Shape</a>
           </div>
           <div className="mega-side-card">
-            <strong>Need a datasheet?</strong>
-            <p>Download the LED screen catalog or start a WhatsApp chat with project details.</p>
-            <a href="/assets/docs/hafond-led-screen-catalog.pdf">Download Catalog</a>
-            <a className="whatsapp-link" href={whatsappUrl} target="_blank" rel="noreferrer">WhatsApp Us</a>
+            <strong>{copy.cta.datasheet}</strong>
+            <p>{copy.mega.downloadText}</p>
+            <a href="/assets/docs/hafond-led-screen-catalog.pdf">{copy.cta.catalog}</a>
+            <a className="whatsapp-link" href={whatsappUrl} target="_blank" rel="noreferrer">{copy.cta.whatsapp}</a>
           </div>
         </div>
       )}
       {type === 'solutions' && (
-        <div className="mega-menu mega-solutions" aria-label="Solutions mega menu">
+        <div className="mega-menu mega-solutions" aria-label={`${copy.nav.solutions} menu`}>
           <div className="mega-column mega-featured">
-            <span>Solution Pages</span>
-            <h3>Build landing pages around buyer intent.</h3>
-            <p>Use these scenarios for SEO, AI search answers and later Google Ads landing pages.</p>
+            <span>{copy.nav.solutions}</span>
+            <h3>{copy.mega.solutionsTitle}</h3>
+            <p>{copy.mega.solutionsText}</p>
           </div>
           <div className="mega-column">
             <span>Outdoor & Public</span>
@@ -240,21 +233,51 @@ function MegaItem({ label, href, type }) {
         </div>
       )}
       {type === 'about' && (
-        <div className="mega-menu mega-compact" aria-label="About menu">
-          <div className="mega-column"><span>Company</span><a href="#about">Company Overview</a><a href="#about">Team & Management</a><a href="#factory">Certifications</a><a href="#factory">Why HAFOND</a></div>
-          <div className="mega-column mega-featured"><span>Trust Signal</span><h3>Manufacturer, not trading company.</h3><p>Est. 2014, Shenzhen factory, 72-hour aging test and QC on site.</p></div>
+        <div className="mega-menu mega-compact" aria-label={`${copy.nav.about} menu`}>
+          <div className="mega-column">
+            <span>{copy.mega.company}</span>
+            <a href="#about">{copy.mega.overview}</a>
+            <a href="#about">{copy.mega.team}</a>
+            <a href="#factory">{copy.mega.certifications}</a>
+            <a href="#factory">{copy.mega.why}</a>
+          </div>
+          <div className="mega-column mega-featured">
+            <span>{copy.mega.trustSignal}</span>
+            <h3>{copy.mega.trustTitle}</h3>
+            <p>{copy.mega.trustText}</p>
+          </div>
         </div>
       )}
       {type === 'cases' && (
-          <div className="mega-menu mega-compact" aria-label="Cases menu">
-            <div className="mega-column"><span>Case Categories</span><a href="#cases">All Projects</a><a href="#cases">Outdoor DOOH Projects</a><a href="#cases">Stadium & Municipal</a><a href="#cases">Creative Retail Landmarks</a></div>
-          <div className="mega-column mega-featured"><span>Project Proof</span><h3>Real photos and verified details.</h3><p>Case pages focus on actual project scenes, product configuration and installation requirements.</p></div>
+        <div className="mega-menu mega-compact" aria-label={`${copy.nav.cases} menu`}>
+          <div className="mega-column">
+            <span>{copy.mega.caseCategories}</span>
+            <a href="#cases">{copy.mega.allProjects}</a>
+            <a href="#cases">Outdoor DOOH Projects</a>
+            <a href="#cases">Stadium & Municipal</a>
+            <a href="#cases">Creative Retail Landmarks</a>
+          </div>
+          <div className="mega-column mega-featured">
+            <span>{copy.mega.projectProof}</span>
+            <h3>{copy.mega.proofTitle}</h3>
+            <p>{copy.mega.proofText}</p>
+          </div>
         </div>
       )}
       {type === 'resources' && (
-        <div className="mega-menu mega-compact" aria-label="Resources menu">
-          <div className="mega-column"><span>Resources</span><a href="#resources">FAQ</a><a href="/assets/docs/hafond-led-screen-catalog.pdf">Download Center</a><a href="#resources">LED Screen Guide</a><a href="#resources">Pixel Pitch Guide</a></div>
-          <div className="mega-column mega-featured"><span>AIO / GEO</span><h3>Answer buyer questions clearly.</h3><p>Short answers, tables and FAQs help Google AI Overview and Perplexity parse HAFOND.</p></div>
+        <div className="mega-menu mega-compact" aria-label={`${copy.nav.resources} menu`}>
+          <div className="mega-column">
+            <span>{copy.mega.resources}</span>
+            <a href="#resources">FAQ</a>
+            <a href="/assets/docs/hafond-led-screen-catalog.pdf">{copy.mega.downloadCenter}</a>
+            <a href="#resources">{copy.mega.guide}</a>
+            <a href="#resources">{copy.mega.pitchGuide}</a>
+          </div>
+          <div className="mega-column mega-featured">
+            <span>AIO / GEO</span>
+            <h3>{copy.mega.aioTitle}</h3>
+            <p>{copy.mega.aioText}</p>
+          </div>
         </div>
       )}
     </div>
@@ -270,29 +293,29 @@ function SectionIntro({ title, text }) {
   );
 }
 
-function Footer() {
+function Footer({ copy }) {
   return (
     <footer className="site-footer" id="contact">
       <div>
         <Image src="/assets/hafond-logo.png" alt="HAFOND logo" width={260} height={68} />
-        <p>Shenzhen LED display manufacturer since 2014 for international project buyers.</p>
+        <p>{copy.footer.text}</p>
       </div>
       <div>
-        <strong>Products</strong>
-        <a href="#products">Outdoor Fixed LED</a>
-        <a href="#products">Indoor Fine Pitch</a>
-        <a href="#products">Creative Custom LED</a>
-        <a href="#products">Rental LED Display</a>
+        <strong>{copy.footer.products}</strong>
+        <a href="#products">{copy.products[0].title}</a>
+        <a href="#products">{copy.products[2].title}</a>
+        <a href="#products">{copy.products[1].title}</a>
+        <a href="#products">{copy.products[4].title}</a>
       </div>
       <div>
-        <strong>Quick Links</strong>
-        <a href="#solutions">Solutions</a>
-        <a href="#factory">Factory</a>
-        <a href="#cases">Cases</a>
-        <a href="#resources">FAQ / Resources</a>
+        <strong>{copy.footer.quickLinks}</strong>
+        <a href="#solutions">{copy.nav.solutions}</a>
+        <a href="#factory">{copy.nav.factory}</a>
+        <a href="#cases">{copy.nav.cases}</a>
+        <a href="#resources">{copy.footer.faqResources}</a>
       </div>
       <div>
-        <strong>Contact</strong>
+        <strong>{copy.footer.contact}</strong>
         <a href="mailto:info@hafondled.com">info@hafondled.com</a>
         <a href={whatsappUrl} target="_blank" rel="noreferrer">+86-18824278011</a>
         <p>2nd Floor, Bldg 7, Huaide Cuihu Industrial Park, Fuyong Street, Baoan District, Shenzhen 518103, China</p>
