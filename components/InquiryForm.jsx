@@ -105,6 +105,82 @@ const formCopies = {
     consent: 'Confirmo que esta es una consulta real de proyecto.',
     submit: 'Enviar consulta',
     submitting: 'Enviando...'
+  },
+  fr: {
+    hints: {
+      name: 'Saisissez votre nom complet.',
+      email: 'Utilisez un e-mail professionnel valide.',
+      phone: 'Ajoutez l’indicatif du pays si possible.',
+      company: 'Optionnel. Ajoutez le nom de votre entreprise.',
+      country: 'Optionnel. Indiquez votre pays ou région.',
+      productRequirement: 'Optionnel. Indiquez pixel pitch, taille, usage intérieur/extérieur ou quantité.',
+      message: 'Optionnel. Ajoutez délai, site d’installation, budget ou exigences spéciales.'
+    },
+    labels: { name: 'Nom', email: 'E-mail', phone: 'Téléphone / WhatsApp', company: 'Entreprise', country: 'Pays / Région', productRequirement: 'Exigences produit', message: 'Message' },
+    placeholders: { name: 'Votre nom complet', email: 'nom@entreprise.com', phone: '+33 6 00 00 00 00', company: 'Nom de l’entreprise', country: 'France, UAE, Allemagne...', productRequirement: 'Écran LED extérieur, P3.91, 40 m²...', message: 'Indiquez la taille du projet, le site, le délai et les exigences.' },
+    errors: {
+      name: 'Le nom est obligatoire.', emailRequired: 'L’e-mail est obligatoire.', emailInvalid: 'Saisissez un e-mail valide.', phoneRequired: 'Le téléphone est obligatoire.', phoneInvalid: 'Saisissez un numéro international valide.', consent: 'Confirmez qu’il s’agit d’une vraie demande de projet.', spam: 'La vérification anti-spam a échoué.', complete: 'Complétez les champs obligatoires avant l’envoi.', sending: 'Envoi de votre demande...', success: 'Demande envoyée. Notre équipe répondra sous 24 heures.', failed: 'Échec de l’envoi. Veuillez écrire à info@hafondled.com ou réessayer.'
+    },
+    consent: 'Je confirme qu’il s’agit d’une vraie demande de projet.',
+    submit: 'Envoyer la demande',
+    submitting: 'Envoi...'
+  },
+  de: {
+    hints: {
+      name: 'Bitte geben Sie Ihren vollständigen Namen ein.',
+      email: 'Verwenden Sie eine gültige geschäftliche E-Mail.',
+      phone: 'Fügen Sie möglichst die Landesvorwahl hinzu.',
+      company: 'Optional. Firmen- oder Organisationsname.',
+      country: 'Optional. Land oder Marktregion.',
+      productRequirement: 'Optional. Pixel Pitch, Bildschirmgröße, Indoor/Outdoor oder Menge angeben.',
+      message: 'Optional. Termin, Installationsort, Budget oder besondere Anforderungen.'
+    },
+    labels: { name: 'Name', email: 'E-Mail', phone: 'Telefon / WhatsApp', company: 'Firma', country: 'Land / Region', productRequirement: 'Produktanforderungen', message: 'Nachricht' },
+    placeholders: { name: 'Ihr vollständiger Name', email: 'name@firma.com', phone: '+49 170 0000000', company: 'Firmenname', country: 'Deutschland, UAE, USA...', productRequirement: 'Outdoor LED Display, P3.91, 40 m²...', message: 'Projektgröße, Standort, Termin und Anforderungen eingeben.' },
+    errors: {
+      name: 'Name ist erforderlich.', emailRequired: 'E-Mail ist erforderlich.', emailInvalid: 'Bitte geben Sie eine gültige E-Mail ein.', phoneRequired: 'Telefon ist erforderlich.', phoneInvalid: 'Bitte geben Sie eine gültige internationale Telefonnummer ein.', consent: 'Bitte bestätigen Sie, dass dies eine echte Projektanfrage ist.', spam: 'Anti-Spam-Prüfung fehlgeschlagen.', complete: 'Bitte füllen Sie die Pflichtfelder vor dem Absenden aus.', sending: 'Ihre Anfrage wird gesendet...', success: 'Anfrage erfolgreich gesendet. Unser Team antwortet innerhalb von 24 Stunden.', failed: 'Senden fehlgeschlagen. Bitte schreiben Sie an info@hafondled.com oder versuchen Sie es erneut.'
+    },
+    consent: 'Ich bestätige, dass dies eine echte Projektanfrage ist.',
+    submit: 'Anfrage senden',
+    submitting: 'Senden...'
+  },
+  ru: {
+    hints: {
+      name: 'Введите ваше полное имя.',
+      email: 'Используйте действительный рабочий e-mail.',
+      phone: 'По возможности укажите код страны.',
+      company: 'Необязательно. Укажите компанию или организацию.',
+      country: 'Необязательно. Укажите страну или регион.',
+      productRequirement: 'Необязательно. Укажите pixel pitch, размер экрана, indoor/outdoor или количество.',
+      message: 'Необязательно. Укажите сроки, место установки, бюджет или особые требования.'
+    },
+    labels: { name: 'Имя', email: 'E-mail', phone: 'Телефон / WhatsApp', company: 'Компания', country: 'Страна / регион', productRequirement: 'Требования к продукту', message: 'Сообщение' },
+    placeholders: { name: 'Ваше полное имя', email: 'name@company.com', phone: '+7 900 000 00 00', company: 'Название компании', country: 'Россия, UAE, Германия...', productRequirement: 'Outdoor LED display, P3.91, 40 м²...', message: 'Опишите размер проекта, место установки, сроки и требования.' },
+    errors: {
+      name: 'Имя обязательно.', emailRequired: 'E-mail обязателен.', emailInvalid: 'Введите действительный e-mail.', phoneRequired: 'Телефон обязателен.', phoneInvalid: 'Введите действительный международный номер телефона.', consent: 'Подтвердите, что это реальный проектный запрос.', spam: 'Антиспам-проверка не пройдена.', complete: 'Заполните обязательные поля перед отправкой.', sending: 'Отправляем ваш запрос...', success: 'Запрос отправлен. Наша команда ответит в течение 24 часов.', failed: 'Отправка не удалась. Напишите на info@hafondled.com или попробуйте снова.'
+    },
+    consent: 'Я подтверждаю, что это реальный проектный запрос.',
+    submit: 'Отправить запрос',
+    submitting: 'Отправка...'
+  },
+  pt: {
+    hints: {
+      name: 'Digite seu nome completo.',
+      email: 'Use um e-mail comercial válido.',
+      phone: 'Inclua o código do país quando possível.',
+      company: 'Opcional. Adicione o nome da empresa ou organização.',
+      country: 'Opcional. Informe seu país ou região.',
+      productRequirement: 'Opcional. Informe pixel pitch, tamanho, uso interno/externo ou quantidade.',
+      message: 'Opcional. Adicione prazo, local de instalação, orçamento ou requisitos especiais.'
+    },
+    labels: { name: 'Nome', email: 'E-mail', phone: 'Telefone / WhatsApp', company: 'Empresa', country: 'País / Região', productRequirement: 'Requisitos do produto', message: 'Mensagem' },
+    placeholders: { name: 'Seu nome completo', email: 'nome@empresa.com', phone: '+55 11 90000 0000', company: 'Nome da empresa', country: 'Brasil, Portugal, UAE...', productRequirement: 'Tela LED externa, P3.91, 40 m²...', message: 'Informe tamanho do projeto, local, prazo e requisitos.' },
+    errors: {
+      name: 'Nome é obrigatório.', emailRequired: 'E-mail é obrigatório.', emailInvalid: 'Digite um e-mail válido.', phoneRequired: 'Telefone é obrigatório.', phoneInvalid: 'Digite um número internacional válido.', consent: 'Confirme que esta é uma consulta real de projeto.', spam: 'A verificação anti-spam falhou.', complete: 'Preencha os campos obrigatórios antes de enviar.', sending: 'Enviando sua consulta...', success: 'Consulta enviada. Nossa equipe responderá em até 24 horas.', failed: 'Falha no envio. Envie e-mail para info@hafondled.com ou tente novamente.'
+    },
+    consent: 'Confirmo que esta é uma consulta real de projeto.',
+    submit: 'Enviar consulta',
+    submitting: 'Enviando...'
   }
 };
 

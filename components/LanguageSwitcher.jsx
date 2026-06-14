@@ -4,12 +4,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
 export const languages = [
-  { code: 'en', label: 'English', nativeLabel: 'English', icon: '🇬🇧', pathPrefix: '' },
-  { code: 'fr', label: 'French', nativeLabel: 'Français', icon: '🇫🇷', pathPrefix: '/fr' },
-  { code: 'es', label: 'Spanish', nativeLabel: 'Español', icon: '🇪🇸', pathPrefix: '/es' },
-  { code: 'de', label: 'German', nativeLabel: 'Deutsch', icon: '🇩🇪', pathPrefix: '/de' },
-  { code: 'ru', label: 'Russian', nativeLabel: 'Русский', icon: '🇷🇺', pathPrefix: '/ru' },
-  { code: 'pt', label: 'Portuguese', nativeLabel: 'Português', icon: '🇵🇹', pathPrefix: '/pt' }
+  { code: 'en', label: 'English', nativeLabel: 'English', icon: 'EN', pathPrefix: '' },
+  { code: 'fr', label: 'French', nativeLabel: 'Français', icon: 'FR', pathPrefix: '/fr' },
+  { code: 'es', label: 'Spanish', nativeLabel: 'Español', icon: 'ES', pathPrefix: '/es' },
+  { code: 'de', label: 'German', nativeLabel: 'Deutsch', icon: 'DE', pathPrefix: '/de' },
+  { code: 'ru', label: 'Russian', nativeLabel: 'Русский', icon: 'RU', pathPrefix: '/ru' },
+  { code: 'pt', label: 'Portuguese', nativeLabel: 'Português', icon: 'PT', pathPrefix: '/pt' }
 ];
 
 const languagePrefixPattern = /^\/(fr|es|de|ru|pt)(?=\/|$)/;
