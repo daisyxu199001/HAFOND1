@@ -3,6 +3,92 @@
 import { useState } from 'react';
 import { ArrowIcon } from './Icons';
 
+/**
+ * Analytics helpers
+ * ---------------------------------------------------------------------------
+ * IMPORTANT: Google Analytics / GTM events must NEVER contain personal data.
+ * The raw form values (name, email, phone, company, message) stay on the
+ * server side only and are never pushed to the dataLayer.
+ * Only coarse, non-identifying classifications are reported.
+ */
+
+const REPORTED_LEADS_KEY = 'hafond-reported-leads';
+
+function getLocaleFromPath(pathname) {
+  const segment = String(pathname || '').split('/').filter(Boolean)[0];
+  return /^(fr|de|es|ru|pt)$/.test(segment) ? segment : 'en';
+}
+
+/** Maps a free-text country input to a coarse region. Never returns raw input. */
+function mapCountryToRegion(country) {
+  const value = String(country || '').toLowerCase();
+
+  if (!value) return '(not provided)';
+
+  const regions = [
+    ['north-america', ['united states', 'usa', 'us', 'canada', 'mexico']],
+    ['south-america', ['brazil', 'chile', 'argentina', 'peru', 'colombia']],
+    ['middle-east', ['uae', 'dubai', 'saudi', 'qatar', 'kuwait', 'israel']],
+    ['western-europe', ['germany', 'france', 'uk', 'united kingdom', 'spain', 'italy', 'netherlands']],
+    ['eastern-europe', ['russia', 'poland', 'ukraine', 'serbia', 'turkey', 'czech']],
+    ['southeast-asia', ['thailand', 'vietnam', 'indonesia', 'malaysia', 'singapore', 'philippines']],
+    ['east-asia', ['china', 'japan', 'korea', 'hong kong', 'taiwan']],
+    ['oceania', ['australia', 'new zealand']],
+    ['africa', ['nigeria', 'south africa', 'kenya', 'egypt']]
+  ];
+
+  for (const [region, keywords] of regions) {
+    if (keywords.some((keyword) => value.includes(keyword))) {
+      return region;
+    }
+  }
+
+  return 'other';
+}
+
+/** Maps free-text product requirements to a coarse category. Never returns raw input. */
+function mapProductCategory(requirement) {
+  const value = String(requirement || '').toLowerCase();
+
+  if (!value) return '(not provided)';
+
+  if (value.includes('transparent')) return 'transparent';
+  if (value.includes('poster')) return 'poster';
+  if (value.includes('rental') || value.includes('stage')) return 'rental';
+  if (value.includes('holographic') || value.includes('hologram')) return 'holographic';
+  if (value.includes('floor') || value.includes('tile')) return 'floor';
+  if (value.includes('outdoor')) return 'outdoor';
+  if (value.includes('indoor')) return 'indoor';
+  if (value.includes('module')) return 'module';
+
+  return 'other';
+}
+
+/** Returns true when a submission id has already been reported in this session. */
+function hasReportedSubmission(submissionId) {
+  if (!submissionId || typeof window === 'undefined') return false;
+
+  try {
+    const reported = JSON.parse(window.sessionStorage.getItem(REPORTED_LEADS_KEY) || '[]');
+    return Array.isArray(reported) && reported.includes(submissionId);
+  } catch {
+    return false;
+  }
+}
+
+function rememberReportedSubmission(submissionId) {
+  if (!submissionId || typeof window === 'undefined') return;
+
+  try {
+    const reported = JSON.parse(window.sessionStorage.getItem(REPORTED_LEADS_KEY) || '[]');
+    const next = Array.isArray(reported) ? reported : [];
+    next.push(submissionId);
+    window.sessionStorage.setItem(REPORTED_LEADS_KEY, JSON.stringify(next.slice(-20)));
+  } catch {
+    /* storage unavailable - dedupe degrades gracefully */
+  }
+}
+
 const initialValues = {
   name: '',
   email: '',
@@ -253,7 +339,11 @@ export default function InquiryForm({ language = 'en' }) {
       ...values,
       page: window.location.pathname,
       utm_source: params.get('utm_source') || '',
-      utm_campaign: params.get('utm_campaign') || ''
+      utm_medium: params.get('utm_medium') || '',
+      utm_campaign: params.get('utm_campaign') || '',
+      utm_term: params.get('utm_term') || '',
+      utm_content: params.get('utm_content') || '',
+      gclid: params.get('gclid') || ''
     };
 
     try {
@@ -263,13 +353,38 @@ export default function InquiryForm({ language = 'en' }) {
         body: JSON.stringify(payload)
       });
 
-      if (!response.ok) {
+      // Parse defensively. If the body is not JSON we still honour the HTTP
+      // status, so a delivered lead is never reported as a failure.
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || result.ok === false) {
         throw new Error('Submit failed');
       }
 
-      window.localStorage.setItem('hafond-b2b-inquiry', JSON.stringify(payload));
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'lead_form_submit', ...payload });
+      // De-duplicate: a submission must never be counted twice.
+      if (!hasReportedSubmission(result.submissionId)) {
+        rememberReportedSubmission(result.submissionId);
+
+        // Only non-identifying parameters are pushed. No name, email, phone,
+        // company, country text or message content is ever included.
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'generate_lead',
+          host_name: window.location.hostname,
+          page_location: window.location.pathname,
+          language: getLocaleFromPath(window.location.pathname),
+          form_location: 'inquiry_form',
+          lead_region: mapCountryToRegion(values.country),
+          product_category: mapProductCategory(values.productRequirement),
+          has_company: Boolean(values.company),
+          has_project_detail: String(values.message || '').length > 20,
+          utm_source: payload.utm_source || '(not set)',
+          utm_medium: payload.utm_medium || '(not set)',
+          utm_campaign: payload.utm_campaign || '(not set)',
+          submission_id: result.submissionId || '(not set)'
+        });
+      }
+
       setValues(initialValues);
       setErrors({});
       setSubmitState('success');

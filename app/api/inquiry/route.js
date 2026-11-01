@@ -18,6 +18,7 @@ export async function POST(request) {
   }
 
   const inquiry = {
+    submissionId: crypto.randomUUID(),
     name: payload.name.trim(),
     email: payload.email.trim(),
     phone: payload.phone.trim(),
@@ -48,7 +49,7 @@ export async function POST(request) {
     console.info('New inquiry received:', inquiry);
   }
 
-  return Response.json({ ok: true });
+  return Response.json({ ok: true, submissionId: inquiry.submissionId });
 }
 
 function validateInquiry(payload) {
